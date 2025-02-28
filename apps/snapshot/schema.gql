@@ -1,0 +1,30 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AccountingData {
+  householdId: String!
+  accountingData: String!
+  timestamp: String!
+}
+
+type PersonData {
+  householdId: String!
+  personData: String!
+  timestamp: String!
+}
+
+type SnapshotDataDto {
+  householdId: String!
+  accounting: AccountingData
+  person: PersonData
+  timestamp: String!
+}
+
+type Query {
+  hello: String!
+}
+
+type Subscription {
+  snapshotUpdated(householdId: String!): SnapshotDataDto!
+}
