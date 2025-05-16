@@ -8,15 +8,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
+    transport: Transport.NATS,
     options: {
-      client: {
-        brokers: ['localhost:9092'],
-      },
-      consumer: {
-        groupId: 'accounting',
-        allowAutoTopicCreation: true,
-      },
+      servers: ['localhost:4222'],
+      user: 'nats-user',
+      pass: 'nats-pass',
+      queue: 'accounting_queue',
     },
   });
 
@@ -26,7 +23,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Accounting API')
-    .setDescription('API for handling accounting data and emitting Kafka events')
+    .setDescription('API for handling accounting data and emitting NATS events')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

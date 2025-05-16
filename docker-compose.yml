@@ -1,9 +1,4 @@
-version: '3.8'
-
 services:
-  # --------------------------------------
-  # Zookeeper (Required for Kafka)
-  # --------------------------------------
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
@@ -11,15 +6,10 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  # --------------------------------------
-  # Kafka (Message Broker)
-  # --------------------------------------
   broker:
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
     ports:
-    # To learn about configuring Kafka for access across networks see
-    # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
       - "9092:9092"
       - "9093:9093"
     depends_on:
@@ -30,14 +20,11 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_C://0.0.0.0:9093,PLAINTEXT_L://0.0.0.0:9092,
+      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_C://0.0.0.0:9093,PLAINTEXT_L://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://broker:29092,PLAINTEXT_L://localhost:9092,PLAINTEXT_C://broker:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_L:PLAINTEXT,PLAINTEXT_C:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
 
-  # --------------------------------------
-  # Kafka UI (Optional - Monitor Kafka)
-  # --------------------------------------
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
@@ -51,32 +38,42 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker:9093
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
 
-  # --------------------------------------
-  # MongoDB (Database)
-  # --------------------------------------
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    restart: always
+  nats:
+    container_name: nats
+    image: nats:latest
+    restart: unless-stopped
+    command: [
+      "--jetstream",
+      "--http_port=8222",
+      "--user=nats-user",
+      "--pass=nats-pass"
+    ]
     ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: adminpassword
-
-  # --------------------------------------
-  # Mongo Express (Optional - UI for MongoDB)
-  # --------------------------------------
-  mongo-express:
-    image: mongo-express:latest
-    container_name: mongo-express
-    restart: always
+      - '4222:4222'
+      - '6222:6222'
+      - '8222:8222'
+    volumes:
+      - nats_data:/data/nats
+  nats-dashboard:
+    image: mdawar/nats-dashboard:latest
+    container_name: nats-dashboard
     ports:
-      - "8081:8081"
+      - "8000:80"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: adminpassword
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      
+      - REVERSE_PROXY_UPSTREAM=nats:8222
     depends_on:
-      - mongodb
+      - nats
+
+  nats-kafka-bridge:
+    container_name: nats-kafka-bridge
+    image: natsio/nats-kafka:latest
+    restart: unless-stopped
+    depends_on:
+      - nats
+      - broker
+    volumes:
+      - ./nats-kafka-config.json:/etc/nats-kafka/config.json:ro
+    command: ["-c", "/etc/nats-kafka/config.json"]
+
+volumes:
+  nats_data:

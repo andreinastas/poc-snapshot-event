@@ -7,15 +7,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
+    transport: Transport.NATS,
     options: {
-      client: {
-        brokers: ['localhost:9092'],
-      },
-      consumer: {
-        groupId: 'snapshot',
-        allowAutoTopicCreation: true,
-      },
+      servers: ['localhost:4222'],
+      user: 'nats-user',
+      pass: 'nats-pass',
+      queue: 'snapshot_queue',
     },
   });
 

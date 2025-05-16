@@ -7,16 +7,12 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
+        name: 'NATS_SERVICE',
+        transport: Transport.NATS,
         options: {
-          client: {
-            clientId: 'accounting',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'accounting',
-          },
+          servers: ['localhost:4222'],
+          user: 'nats-user',
+          pass: 'nats-pass',
         },
       },
     ]),

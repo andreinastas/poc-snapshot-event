@@ -9,7 +9,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create an accounting data and emit a Kafka event' })
+  @ApiOperation({ summary: 'Create an accounting data and emit a NATS event' })
   @ApiResponse({ status: 201, description: 'Accounting data event emitted successfully' })
   createAccount(@Body() accountingData: AccountingDataDto) {
     return this.appService.emitAccountingDataCreatedEvent(accountingData);

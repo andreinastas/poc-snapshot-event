@@ -19,6 +19,7 @@
     "graphql": "^16.10.0",
     "graphql-subscriptions": "^3.0.0",
     "kafkajs": "^2.2.4",
+    "nats": "^2.29.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "swagger-ui-express": "^5.0.1"

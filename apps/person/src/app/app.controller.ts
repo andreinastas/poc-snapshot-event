@@ -8,7 +8,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class AppController {
   constructor(private readonly appService: AppService) {}
   @Post()
-  @ApiOperation({ summary: 'Create a person data and emit a Kafka event' })
+  @ApiOperation({ summary: 'Create a person data and emit a NATS event' })
   @ApiResponse({ status: 201, description: 'Person event emitted successfully' })
   createAccount(@Body() personData: PersonDataDto) {
     return this.appService.emitPersonDataCreatedEvent(personData);

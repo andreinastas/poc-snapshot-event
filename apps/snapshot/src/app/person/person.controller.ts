@@ -8,8 +8,8 @@ export class PersonController {
 
   @EventPattern('personData.created')
   async handlePersonEvent(@Payload() message: any) {
-    console.log('Received Kafka Event from Person:', message);
-
-    this.snapshotResolver.updateSnapshot(message.householdId, { person: message });
+    console.log('Received NATS Event from Person:', message);
+    const data = JSON.parse(message);
+    this.snapshotResolver.updateSnapshot(data.householdId, { person: data });
   }
 }

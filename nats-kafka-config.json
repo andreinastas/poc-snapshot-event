@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "logging": {
+    "debug": true,
+    "trace": true,
+    "colors": true
+  },
+  "nats": {
+    "servers": ["nats://nats-user:nats-pass@nats:4222"]
+  },
+  "kafka": {
+    "brokers": ["broker:9093"]
+  },
+  "connect": [
+    {
+      "type": "NATSToKafka",
+      "brokers": ["broker:9093"],
+      "topic": "accountingData.created",
+      "subject": "accountingData.created"
+    },
+    {
+      "type": "NATSToKafka",
+      "brokers": ["broker:9093"],
+      "topic": "personData.created",
+      "subject": "personData.created"
+    }
+  ]
+}

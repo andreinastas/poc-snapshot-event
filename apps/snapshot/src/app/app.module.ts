@@ -17,16 +17,12 @@ import { PersonController } from './person/person.controller';
 
     ClientsModule.register([
       {
-        name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
+        name: 'NATS_SERVICE',
+        transport: Transport.NATS,
         options: {
-          client: {
-            clientId: 'snapshot',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'snapshot',
-          },
+          servers: ['localhost:4222'],
+          user: 'nats-user',
+          pass: 'nats-pass',
         },
       },
     ]),

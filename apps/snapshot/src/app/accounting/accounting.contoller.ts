@@ -8,8 +8,10 @@ export class AccountingController {
 
   @EventPattern('accountingData.created')
   async handleAccountingEvent(@Payload() message: any) {
-    console.log('Received Kafka Event from Accounting:', message);
-
-    this.snapshotResolver.updateSnapshot(message.householdId, { accounting: message });
+    console.log('Received NATS Event from Accounting:', message);
+    
+    const data = JSON.parse(message);
+    
+    this.snapshotResolver.updateSnapshot(data.householdId, { accounting: data });
   }
 }

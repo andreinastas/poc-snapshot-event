@@ -1,0 +1,7 @@
+{
+  "server": {
+    "name": "My NATS Server",
+    "url": "/proxy/"
+  },
+  "hideServerInput": true
+}
