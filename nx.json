@@ -4,6 +4,9 @@
     "appsDir": "apps",
     "libsDir": "libs"
   },
+  "tui": {
+    "enabled": false
+  },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [

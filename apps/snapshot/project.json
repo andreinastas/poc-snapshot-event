@@ -24,7 +24,8 @@
       "options": {
         "buildTarget": "snapshot:build",
         "runBuildTargetDependencies": false,
-        "watch": true
+        "watch": false,
+        "inspect": false
       },
       "configurations": {
         "development": {

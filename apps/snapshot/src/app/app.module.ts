@@ -13,6 +13,7 @@ import { PersonController } from './person/person.controller';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'apps/snapshot/schema.gql'),
       installSubscriptionHandlers: true,
+      playground: true,
     }),
 
     ClientsModule.register([

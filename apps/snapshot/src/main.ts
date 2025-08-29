@@ -18,12 +18,13 @@ async function bootstrap() {
       },
     },
   });
+  app.enableShutdownHooks();
 
   await app.startAllMicroservices();
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = 3002;
+  const port = 3003;
   await app.listen(port);
 
   Logger.log(`Application is running on: http://localhost:${port}/${globalPrefix}`);
